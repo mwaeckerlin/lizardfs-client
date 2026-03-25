@@ -1,0 +1,4 @@
+services:
+  lizardfs-client:
+    image: mwaeckerlin/lizardfs-client
+    build: .
