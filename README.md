@@ -1,4 +1,6 @@
-# lizardfs-client
+# LizardFS Client
+
+Mount ans access your LizardFS filesystems in Docker.
 
 LizardFS is no longer supported in new Ubuntu versions. To still access an existing LizardFS installation, this Docker image provides `lizardfs-client` and `rsync` on Ubuntu 20.04. It is mainly intended to migrate data from LizardFS to a new [CephFS](https://docs.ceph.com/en/latest/cephfs/) setup.
 
