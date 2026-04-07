@@ -21,7 +21,7 @@ lfsmount -o rw,mfsmaster=universum,mfssubfolder=/volumes,mfsdelayedinit,nosuid,n
 My CephFS is mounted on `/srv`, so I mount it into the container to be able to back up LizardFS data to CephFS:
 
 ```sh
-docker run -it --rm --name lizard --device /dev/fuse --cap-add SYS_ADMIN --security-opt apparmor:unconfined -v /srv:/srv mwaeckerlin/lizardfs-client
+docker run -it --rm --name lizard --device /dev/fuse --cap-add SYS_ADMIN --security-opt apparmor:unconfined -v /srv:/srv mwaeckerlin/lizardfs-client:mrw-privat
 ```
 
 ## Build and Run
@@ -41,7 +41,7 @@ docker compose run --rm lizardfs-client bash
 Alternatively, using `docker run` directly:
 
 ```sh
-docker run -it --rm --name lizard --device /dev/fuse --cap-add SYS_ADMIN --security-opt apparmor:unconfined -v /srv:/srv mwaeckerlin/lizardfs-client bash
+docker run -it --rm --name lizard --device /dev/fuse --cap-add SYS_ADMIN --security-opt apparmor:unconfined -v /srv:/srv mwaeckerlin/lizardfs-client:mrw-privat bash
 ```
 
 Once inside the container, mount your LizardFS volume (see [Mount Command](#mount-command) above), then use `rsync` to copy data to your target path.

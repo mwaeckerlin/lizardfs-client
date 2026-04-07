@@ -1,6 +1,6 @@
 services:
   lizardfs-client:
-    image: mwaeckerlin/lizardfs-client
+    image: mwaeckerlin/lizardfs-client:mrw-privat
     build: .
     devices:
       - /dev/fuse

@@ -12,6 +12,7 @@ CMD ["set -e; \
      lfsmount -o rw,mfsmaster=universum,mfssubfolder=/volumes,mfsdelayedinit,nosuid,nodev,noatime,big_writes,mfschunkserverwriteto=40000,mfsioretries=120,mfschunkserverconnectreadto=20000,mfschunkserverwavereadto=5000,mfschunkservertotalreadto=20000 /mnt; \
      set +e; \
      rsync -avP --delete-after /srv/keller/ /srv/ceph/cloud/; \
-     rsync -avP --delete-after /mnt/mrw-cloud/ /srv/ceph/lizardfs/mrw-cloud/; \
+     rsync -avP --delete-after --exclude=data/nextcloud.log /mnt/mrw-cloud/ /srv/ceph/lizardfs/mrw-cloud/; \
+     rsync -avP --append-verify --inplace --delete-after /mnt/mrw-cloud/data/nextcloud.log /srv/ceph/lizardfs/mrw-cloud/data/nextcloud.log; \
      rsync -avP --delete-after /mnt/boar-mrw-sh/ /srv/ceph/lizardfs/boar-mrw-sh/; \
      rsync -avP --delete-after /mnt/boar-data/ /srv/ceph/lizardfs/boar-data/"]
