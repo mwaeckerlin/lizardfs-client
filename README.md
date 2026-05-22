@@ -29,7 +29,7 @@ docker run -it --rm --name lizard --device /dev/fuse --cap-add SYS_ADMIN --secur
 Build the image locally:
 
 ```sh
-docker compose build
+npm run build
 ```
 
 Run the container and connect to it interactively (my CephFS is mounted at `/srv`):
