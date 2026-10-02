@@ -1,7 +1,13 @@
-# Builds the images of this repository for amd64 and arm64 and publishes them
-# on Docker Hub, on every push to the default branch and once a week for the
-# security fixes of the base images. The build itself is the reusable workflow
-# docker-image.yml of mwaeckerlin/scratch; its README explains the setup.
+# Builds the image of this repository for amd64 and publishes it on Docker Hub,
+# on every push to the default branch and once a week for the security fixes
+# of the base image. The build itself is the reusable workflow docker-image.yml
+# of mwaeckerlin/scratch; its README explains the setup.
+#
+# amd64 only: the end-to-end test needs a LizardFS master, and the
+# lizardfs-master of Ubuntu 20.04 for arm64 crashes with a segmentation fault
+# (exit 139) right after loading its configuration (measured on the arm64
+# runner 2026-10-02); Ubuntu 22.04 and Debian since bullseye carry no LizardFS,
+# so no arm64 master exists to test an arm64 client against.
 
 name: docker
 
@@ -20,4 +26,6 @@ concurrency: docker-${{ github.ref_name }}
 jobs:
   docker:
     uses: mwaeckerlin/scratch/.github/workflows/docker-image.yml@master
+    with:
+      architectures: '["amd64"]'
     secrets: inherit

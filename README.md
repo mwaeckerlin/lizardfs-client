@@ -52,7 +52,7 @@ Once inside the container, mount your LizardFS volume (see [Mount Command](#moun
 $ npm test
 ```
 
-`npm test` runs the docs contract, the image contract (the LizardFS client and rsync are installed), and the end-to-end test in [tests/e2e](tests/e2e): a LizardFS master and chunk server from the Ubuntu 20.04 packages, and the image, which mounts the file system, writes and reads a file, and copies it out with rsync. All features are listed in [FEATURES.md](FEATURES.md), all tests in [TESTS.md](TESTS.md). The image is published for `linux/amd64` and `linux/arm64` by the reusable workflow of [mwaeckerlin/scratch](https://github.com/mwaeckerlin/scratch#publishing-on-docker-hub).
+`npm test` runs the docs contract, the image contract (the LizardFS client and rsync are installed), and the end-to-end test in [tests/e2e](tests/e2e): a LizardFS master and chunk server from the Ubuntu 20.04 packages, and the image, which mounts the file system, writes and reads a file, and copies it out with rsync. All features are listed in [FEATURES.md](FEATURES.md), all tests in [TESTS.md](TESTS.md). The image is published for `linux/amd64` only: the LizardFS master of Ubuntu 20.04 crashes with a segmentation fault on arm64, and no newer Ubuntu or Debian release carries LizardFS, so an arm64 client cannot be tested. It is published by the reusable workflow of [mwaeckerlin/scratch](https://github.com/mwaeckerlin/scratch#publishing-on-docker-hub).
 
 ## LizardFS History
 
