@@ -1,0 +1,38 @@
+# End-to-end stack of tests/run-e2e.sh: a LizardFS master and one chunk
+# server, and the client image under test, which mounts the file system with
+# FUSE as its README documents, writes a file and copies it out with rsync.
+name: lizardfs-client-e2e
+
+services:
+  master:
+    build:
+      context: .
+      dockerfile: Dockerfile.master
+    image: mwaeckerlin/lizardfs-client-e2e:master
+    networks:
+      - lizardfs
+
+  chunkserver:
+    build:
+      context: .
+      dockerfile: Dockerfile.chunkserver
+    image: mwaeckerlin/lizardfs-client-e2e:chunkserver
+    depends_on: [master]
+    networks:
+      - lizardfs
+
+  client:
+    image: mwaeckerlin/lizardfs-client:mrw-privat
+    devices:
+      - /dev/fuse
+    cap_add:
+      - SYS_ADMIN
+    security_opt:
+      - apparmor:unconfined
+    depends_on: [master, chunkserver]
+    networks:
+      - lizardfs
+
+networks:
+  lizardfs:
+    internal: true

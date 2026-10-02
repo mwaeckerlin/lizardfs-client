@@ -1,0 +1,11 @@
+# A LizardFS chunk server for the end-to-end test: it stores the data of the
+# files in one directory and registers with the master named "master". The
+# Ubuntu package names its program lfschunkserver.
+FROM ubuntu:20.04
+RUN apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends lizardfs-chunkserver \
+    && rm -rf /var/lib/apt/lists/*
+RUN install -d -o lizardfs -g lizardfs /srv/chunks /var/lib/lizardfs \
+    && echo /srv/chunks > /etc/lizardfs/mfshdd.cfg \
+    && printf 'MASTER_HOST = master\nDATA_PATH = /var/lib/lizardfs\nHDD_CONF_FILENAME = /etc/lizardfs/mfshdd.cfg\n' > /etc/lizardfs/mfschunkserver.cfg
+CMD ["lfschunkserver", "-c", "/etc/lizardfs/mfschunkserver.cfg", "-d", "start"]

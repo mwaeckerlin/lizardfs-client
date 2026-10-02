@@ -46,6 +46,14 @@ docker run -it --rm --name lizard --device /dev/fuse --cap-add SYS_ADMIN --secur
 
 Once inside the container, mount your LizardFS volume (see [Mount Command](#mount-command) above), then use `rsync` to copy data to your target path.
 
+## Development
+
+```bash
+$ npm test
+```
+
+`npm test` runs the docs contract, the image contract (the LizardFS client and rsync are installed), and the end-to-end test in [tests/e2e](tests/e2e): a LizardFS master and chunk server from the Ubuntu 20.04 packages, and the image, which mounts the file system, writes and reads a file, and copies it out with rsync. All features are listed in [FEATURES.md](FEATURES.md), all tests in [TESTS.md](TESTS.md). The image is published for `linux/amd64` and `linux/arm64` by the reusable workflow of [mwaeckerlin/scratch](https://github.com/mwaeckerlin/scratch#publishing-on-docker-hub).
+
 ## LizardFS History
 
 LizardFS is a fork of [MooseFS](https://moosefs.com/), an open-source distributed file system. The fork was created to add new features and fix bugs that were not being addressed in the original project. LizardFS was developed and maintained by Skytechnology, a Polish company that built a community and commercial offering around the software.

@@ -1,0 +1,16 @@
+# A LizardFS master for the end-to-end test, from the same Ubuntu release as
+# the client image: the master keeps the metadata and tells the client where
+# the chunks lie. The Ubuntu package names its programs lfs* (lfsmaster) and
+# keeps the mfs* names of the configuration, so every file is named
+# explicitly.
+FROM ubuntu:20.04
+RUN apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends lizardfs-master \
+    && rm -rf /var/lib/apt/lists/*
+# every client of the test network may mount the whole file system read-write
+RUN printf '*\t/\trw,alldirs,maproot=0\n' > /etc/lizardfs/mfsexports.cfg \
+    && printf 'DATA_PATH = /var/lib/lizardfs\nEXPORTS_FILENAME = /etc/lizardfs/mfsexports.cfg\n' > /etc/lizardfs/mfsmaster.cfg \
+    && cp /var/lib/lizardfs/metadata.mfs.empty /var/lib/lizardfs/metadata.mfs \
+    && chown -R lizardfs:lizardfs /var/lib/lizardfs
+EXPOSE 9419 9420 9421
+CMD ["lfsmaster", "-c", "/etc/lizardfs/mfsmaster.cfg", "-d", "start"]
