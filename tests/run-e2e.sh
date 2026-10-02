@@ -49,6 +49,9 @@ grep -q "^COPIED: written through lizardfs$" <<< "${OUT}" && _pass "rsync_copies
 echo ""
 echo "==> LizardFS client end to end: ${PASS} passed, ${FAIL} failed"
 if [[ ${FAIL} -gt 0 ]]; then
+    # the state and exit code of every container: on the arm64 runner the
+    # master stopped after loading its configuration without a log line
+    "${COMPOSE[@]}" ps -a
     "${COMPOSE[@]}" logs --tail 40 master chunkserver
     exit 1
 fi
