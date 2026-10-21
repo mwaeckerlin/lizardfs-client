@@ -1,5 +1,11 @@
 # Changelog
 
+- 2026-10-22 **1.0.2**
+    - The LizardFS master, the mounted folder and the mount options are set at container start, with today's mount as the default
+    - The rsync jobs the container runs are set at container start; without a setting it runs the same five jobs as before
+    - A setting that cannot be used stops the container before anything is mounted, with a message that names it
+    - The configured mount is one command inside an interactive container
+
 - 2026-10-02 **1.0.1**
     - Published for amd64 only: the LizardFS master of Ubuntu 20.04 crashes on arm64, so no arm64 image can be tested against a LizardFS
 

@@ -1,0 +1,32 @@
+#!/bin/bash
+# Mounts the LizardFS, then runs every rsync job of SYNC_JOBS in order and exits with the status of the last job.
+
+allowed='^[]A-Za-z0-9_./=,:+@%~*?[-]+$'
+
+value="${SYNC_JOBS-}"
+IFS=';' read -ra parts <<< "${value//$'\n'/;}"
+
+jobs=()
+number=0
+for part in "${parts[@]}"; do
+    read -ra words <<< "${part}"
+    [[ ${#words[@]} -eq 0 ]] && continue
+    number=$((number + 1))
+    for word in "${words[@]}"; do
+        if ! [[ ${word} =~ ${allowed} ]]; then
+            echo "lizardfs-sync: SYNC_JOBS job ${number} is refused at \"${word}\": an argument may carry only letters, digits and _ . / = , : + @ % ~ * ? [ ] -; separate the jobs with ; and the arguments with spaces" >&2
+            exit 1
+        fi
+    done
+    jobs+=("${part}")
+done
+
+lizardfs-mount || exit
+
+status=0
+for job in "${jobs[@]}"; do
+    read -ra args <<< "${job}"
+    rsync "${args[@]}"
+    status=$?
+done
+exit ${status}

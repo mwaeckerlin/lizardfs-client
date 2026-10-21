@@ -1,0 +1,24 @@
+#!/bin/bash
+# Mounts the LizardFS of LFS_MASTER on /mnt, with the subfolder LFS_SUBFOLDER and the options LFS_MOUNT_OPTIONS.
+
+refuse() {
+    echo "lizardfs-mount: $1=\"$2\" is refused: $3" >&2
+    exit 1
+}
+
+master="${LFS_MASTER-}"
+subfolder="${LFS_SUBFOLDER-}"
+extra="${LFS_MOUNT_OPTIONS-}"
+
+[[ ${master} =~ ^[A-Za-z0-9]([A-Za-z0-9.-]*[A-Za-z0-9])?$ ]] \
+    || refuse LFS_MASTER "${master}" "set it to the host name or IPv4 address of the LizardFS master"
+[[ ${subfolder} =~ ^/[A-Za-z0-9_./-]*$ ]] \
+    || refuse LFS_SUBFOLDER "${subfolder}" "set it to an absolute path in the LizardFS, made of letters, digits and _ . / -"
+[[ ${extra} =~ ^([A-Za-z0-9_.=/-]+(,[A-Za-z0-9_.=/-]+)*)?$ ]] \
+    || refuse LFS_MOUNT_OPTIONS "${extra}" "set it to mount options separated by commas, without spaces, or leave it empty"
+
+options="rw,mfsmaster=${master},mfssubfolder=${subfolder}"
+if [[ -n ${extra} ]]; then
+    options="${options},${extra}"
+fi
+exec lfsmount -o "${options}" /mnt

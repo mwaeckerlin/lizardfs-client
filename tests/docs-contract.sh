@@ -8,7 +8,9 @@
 #   1. a feature number is defined more than once in FEATURES.md,
 #   2. a feature has no test entry in TESTS.md (untested feature),
 #   3. TESTS.md references a feature number that does not exist,
-#   4. a test carries a skip or todo marker — tests are never skipped.
+#   4. a variable the Dockerfile sets with ENV has no row in the
+#      configuration table of README.md,
+#   5. a test carries a skip or todo marker — tests are never skipped.
 #
 # Usage: tests/docs-contract.sh
 
@@ -62,6 +64,19 @@ if [[ -f FEATURES.md && -f TESTS.md ]]; then
     else
         _pass "no_dangling_references"
     fi
+fi
+
+VARIABLES=$(grep -oE '^(ENV)?[[:space:]]+[A-Z][A-Z0-9_]*=' Dockerfile | grep -oE '[A-Z][A-Z0-9_]*=' | tr -d '=')
+UNDOCUMENTED=""
+for v in ${VARIABLES}; do
+    grep -q "^| \`${v}\` |" README.md || UNDOCUMENTED="${UNDOCUMENTED} ${v}"
+done
+if [[ -z "${VARIABLES}" ]]; then
+    _fail "every_variable_documented" "no ENV variable found in Dockerfile"
+elif [[ -n "${UNDOCUMENTED}" ]]; then
+    _fail "every_variable_documented" "missing in the configuration table of README.md:${UNDOCUMENTED}"
+else
+    _pass "every_variable_documented"
 fi
 
 SKIPS=$(grep -rnE 'unittest\.skip|\bskipTest\(|pytest\.mark\.skip|pytest\.skip\(' tests --include='*.py' 2>/dev/null)
